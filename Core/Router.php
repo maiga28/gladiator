@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Gladiator\Aficadev\Core;
 
 class Router
 {
