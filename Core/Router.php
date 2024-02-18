@@ -1,21 +1,20 @@
 <?php
 
 namespace Gladiator\Aficadev\Core;
-
 class Router
 {
-    private $namespace = '';
-    private $routeName;
-    private $routeList = [];
-    private $method;
-    private $controller;
-    private $notFoundView = null;
-    private $arguments = [];
-    private $acceptedHttpMethods = ['get', 'post', 'put', 'patch', 'delete'];
-    private $httpMethod = 'get';
-    private $route = [];
+    private string $namespace = '';
+    private string $routeName;
+    private array $routeList = [];
+    private string $method;
+    private string $controller;
+    private ?string $notFoundView = null;
+    private array $arguments = [];
+    private array $acceptedHttpMethods = ['get', 'post', 'put', 'patch', 'delete'];
+    private string $httpMethod = 'get';
+    private array $route = [];
     private $request;
-    private $requestVarName = 'request';
+    private string $requestVarName = 'request';
 
     /**
      * Return http request method
@@ -108,7 +107,7 @@ class Router
         $args = [];
         
         foreach ($segments_map as $key => $segment) {
-            if(array_key_exists($key, $array_url)) {
+            if (array_key_exists($key, $array_url)) {
                 array_push($args, $array_url[$key]);
                 $array_url[$key] = $segment;
             }
@@ -117,13 +116,12 @@ class Router
         $routeName = '/' . implode('/', $array_url);
 
         $route['segments'] = $args;
-        
-        if($routeName == $route['path'] )
-        {
-            if(!isset($this->routeList[$this->httpMethod]))
-            {
+        $route['name'] = $routeName; // Ajout du nom de route global
+
+        if ($routeName == $route['path']) {
+            if (!isset($this->routeList[$this->httpMethod])) {
                 $this->route = $route;
-            } elseif(!array_key_exists($this->request_path(), $this->routeList[$this->httpMethod])) {
+            } elseif (!array_key_exists($this->request_path(), $this->routeList[$this->httpMethod])) {
                 $this->route = $route;
             }
         }
@@ -182,7 +180,7 @@ class Router
         $this->request = $request;
     }
 
-    /**
+        /**
      * Gets an array of parameters from a method
      *
      * @param string $class
@@ -195,8 +193,12 @@ class Router
 
         $params = $reflectionMethod->getParameters();
 
-        $paramNames = array_map(function( $item ){
-            return $item->getName();
+        $paramNames = array_map(function($item) {
+            if ($item->getType() && method_exists($item->getType(), 'getName')) {
+                return $item->getType()->getName();
+            } else {
+                return '';
+            }
         }, $params);
 
         return $paramNames;
@@ -249,21 +251,22 @@ class Router
             // Validating data type of parameters
             foreach ($params as $key => $p)
             {
+                $glad_params_type = $p->getType();
                 // Checks for configured type
-                if($p->getType()) {
+                if($glad_params_type) {
                     // Check if it is an integer
                     if(isset($this->arguments[$key]))
                     {
-                        if($p->getType()->getName() == 'int')
+                        if($glad_params_type->getName() == 'int')
                         {
                             if (!is_numeric($this->arguments[$key])) {
-                                throw new \InvalidArgumentException('Argument '.($key+1).' passed to Router must be of the type '.$p->getType()->getName().', '.gettype($this->arguments[$key]).' given.');
+                                throw new \InvalidArgumentException('Argument '.($key+1).' passed to Router must be of the type '.$glad_params_type->getName().', '.gettype($this->arguments[$key]).' given.');
                             }
         
                         // Check if it's a string
-                        } elseif($p->getType()->getName() == 'string') {
+                        } elseif($glad_params_type->getName() == 'string') {
                             if (!is_string($this->arguments[$key])) {
-                                throw new \InvalidArgumentException('Argument '.($key+1).'2 passed to Router must be of the type '.$p->getType()->getName().', '.gettype($this->arguments[$key]).' given.');
+                                throw new \InvalidArgumentException('Argument '.($key+1).'2 passed to Router must be of the type '.$glad_params_type->getName().', '.gettype($this->arguments[$key]).' given.');
                             }
                         }
                     }
