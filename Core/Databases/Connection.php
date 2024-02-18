@@ -4,6 +4,7 @@ namespace Gladiator\Aficadev\Core\Databases;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+use Gladiator\Aficadev\Core\Config;
 class Connection
 {
     private $capsule;
@@ -15,18 +16,60 @@ class Connection
         $this->initialize();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param String $type
+     * @return array
+     */
+    private function getConfig(String $type)
+    {
+        switch ($type) {
+            case 'mysql':
+                return [
+                    'driver'    => Config::gladEnv("DB_CONNECTION", 'mysql'),
+                    'host'      => Config::gladEnv("DB_HOST", '127.0.0.1'),
+                    'database'  => Config::gladEnv("DB_DATABASE",'gladiator'),
+                    'username'  => Config::gladEnv("DB_USERNAME", 'gladiator'),
+                    'password'  => Config::gladEnv("DB_PASSWORD", ''),
+                    'charset'   => 'utf8',
+                    'collation' => 'utf8_unicode_ci',
+                    'prefix'    => '',
+                ];
+                break;
+
+            case 'sqlite':
+                return [
+                    'driver'    => Config::gladEnv("DB_CONNECTION", 'sqlite'),
+                    'host'      => Config::gladEnv("DB_HOST", ''),
+                    'database'  => Config::gladEnv("DB_DATABASE", __DIR__.'/database.sqlite'),
+                    'username'  => Config::gladEnv("DB_USERNAME", ''),
+                    'password'  => Config::gladEnv("DB_PASSWORD", ''),
+                    'charset'   => 'utf8',
+                    'collation' => 'utf8_unicode_ci',
+                    'prefix'    => '',
+                ];
+                break;
+            
+            default:
+                return [
+                    'driver'    => Config::gladEnv("DB_CONNECTION", 'mysql'),
+                    'host'      => Config::gladEnv("DB_HOST", '127.0.0.1'),
+                    'database'  => Config::gladEnv("DB_DATABASE",'gladiator'),
+                    'username'  => Config::gladEnv("DB_USERNAME", 'gladiator'),
+                    'password'  => Config::gladEnv("DB_PASSWORD", ''),
+                    'charset'   => 'utf8',
+                    'collation' => 'utf8_unicode_ci',
+                    'prefix'    => '',
+                ];
+                break;
+        }
+    }
+
     private function initialize()
     {
-        $this->capsule->addConnection([
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'database'  => 'test',
-            'username'  => 'root',
-            'password'  => '',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-        ]);
+        // var_dump(Config::get("default"));die();
+        $this->capsule->addConnection($this->getConfig(Config::gladEnv("DB_CONNECTION", 'mysql')));
 
         $this->capsule->setAsGlobal();
         $this->capsule->bootEloquent();
