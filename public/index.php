@@ -1,7 +1,9 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
+
+// ["glad.php","blade.php", "php", "css", "html"]
 
 require("../vendor/autoload.php");
 include('../Core/helpers.php');
