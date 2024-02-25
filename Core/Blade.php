@@ -63,6 +63,11 @@ class Blade {
         return $this->instance;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return Filesystem
+     */
     public function registerFilesystem()
     {
         $this->container->singleton('files', function(){
@@ -107,7 +112,7 @@ class Blade {
      */
     public function registerPhpEngine($resolver)
     {
-        $resolver->register('php', function() { return new PhpEngine(null); });
+        $resolver->register('php', function() { return new PhpEngine($this->registerFilesystem()); });
     }
 
     /**
