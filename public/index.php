@@ -1,5 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require("../vendor/autoload.php");
+include('../Core/helpers.php');
 
 use Gladiator\Aficadev\Core\Router;
 use Gladiator\Aficadev\Core\Databases\Connection;
