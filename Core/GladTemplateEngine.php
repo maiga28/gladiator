@@ -58,14 +58,10 @@ protected function evaluateExpression($expression, $data)
             // Accéder à la propriété de l'objet
             return htmlspecialchars($data[$variable]->$property ?? '', ENT_QUOTES);
         }
-    } else {
-        // Si l'expression ne contient pas de flèche (->), elle est traitée comme une variable normale
-        return htmlspecialchars($data[$expression] ?? '', ENT_QUOTES);
     }
-    // Si aucune correspondance n'est trouvée, renvoyer simplement une chaîne vide
-    return '';
+    // Si aucune correspondance n'est trouvée, renvoyer simplement l'expression telle quelle
+    return htmlspecialchars($data[$expression] ?? '', ENT_QUOTES);
 }
-
 
 
 }
