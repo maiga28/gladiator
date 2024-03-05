@@ -12,7 +12,7 @@ if (!function_exists('view')) {
     function view(string $template, array $data = [])
     {
         $views = dirname(__DIR__) .  DIRECTORY_SEPARATOR . 'views';
-        $cache = dirname(__DIR__) .  DIRECTORY_SEPARATOR . 'cache';
+        $cache = dirname(__DIR__) .  DIRECTORY_SEPARATOR . 'public'.  DIRECTORY_SEPARATOR . 'cache';
 
         $blade = new Blade($views, $cache);
         echo $blade->view()->make($template, $data)->render();
