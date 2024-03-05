@@ -1,3 +1,4 @@
 /vendor
 /.gladEnv
 /public/cache
+/Core/Databases/database.sqlite

@@ -5,11 +5,12 @@ namespace Gladiator\Aficadev\Core\Databases;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 use Gladiator\Aficadev\Core\Config;
+
 class Connection
 {
     private $capsule;
     private $connection;
-    
+
     public function __construct()
     {
         $this->capsule = new Capsule;
@@ -29,7 +30,7 @@ class Connection
                 return [
                     'driver'    => Config::gladEnv("DB_CONNECTION", 'mysql'),
                     'host'      => Config::gladEnv("DB_HOST", '127.0.0.1'),
-                    'database'  => Config::gladEnv("DB_DATABASE",'gladiator'),
+                    'database'  => Config::gladEnv("DB_DATABASE", 'gladiator'),
                     'username'  => Config::gladEnv("DB_USERNAME", 'gladiator'),
                     'password'  => Config::gladEnv("DB_PASSWORD", ''),
                     'charset'   => 'utf8',
@@ -40,22 +41,19 @@ class Connection
 
             case 'sqlite':
                 return [
-                    'driver'    => Config::gladEnv("DB_CONNECTION", 'sqlite'),
-                    'host'      => Config::gladEnv("DB_HOST", ''),
-                    'database'  => Config::gladEnv("DB_DATABASE", __DIR__.'/database.sqlite'),
-                    'username'  => Config::gladEnv("DB_USERNAME", ''),
-                    'password'  => Config::gladEnv("DB_PASSWORD", ''),
-                    'charset'   => 'utf8',
-                    'collation' => 'utf8_unicode_ci',
-                    'prefix'    => '',
+                    'driver'                  => 'sqlite',
+                    'url'                     => Config::gladEnv("DB_HOST", ''),
+                    'database'                => Config::gladEnv("DB_DATABASE", __DIR__ . DIRECTORY_SEPARATOR . 'database.sqlite'),
+                    'prefix'                  => '',
+                    'foreign_key_constraints' => true,
                 ];
                 break;
-            
+
             default:
                 return [
                     'driver'    => Config::gladEnv("DB_CONNECTION", 'mysql'),
                     'host'      => Config::gladEnv("DB_HOST", '127.0.0.1'),
-                    'database'  => Config::gladEnv("DB_DATABASE",'gladiator'),
+                    'database'  => Config::gladEnv("DB_DATABASE", 'gladiator'),
                     'username'  => Config::gladEnv("DB_USERNAME", 'gladiator'),
                     'password'  => Config::gladEnv("DB_PASSWORD", ''),
                     'charset'   => 'utf8',
